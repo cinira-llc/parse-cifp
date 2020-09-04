@@ -4,6 +4,23 @@ See here for an example of the output of this utility: https://www.dropbox.com/s
 
 See how Instrument Procedures (including SIDs and STARs) are actually constructed!
 
+### Docker    
+
+Build the docker image
+
+```
+docker build --tag faa_cifp .
+```
+
+
+Run the docker image
+
+```
+docker run --rm -it -v /tmp/data:/data/ faa_cifp
+```
+
+### Ubuntu
+
 These instructions are based on using Ubuntu 1604
 
 How to get this utility up and running:
