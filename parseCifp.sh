@@ -20,7 +20,9 @@ fi
 
 # Process the supplied file name to get cycle number
 # Save everything after 'cifp_20'
-tmp=${sourceZip#*cifp_20}
+sourceZipFilename=$(basename $sourceZip)
+# 
+tmp=${sourceZipFilename#*_20}
 
 # Remove the extension, leaving the cycle number
 cycle=${tmp%.*}
