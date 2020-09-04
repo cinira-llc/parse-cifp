@@ -3,11 +3,12 @@ set -eu                # Always put this in Bourne shell scripts
 IFS=$(printf '\n\t')  # Always put this in Bourne shell scripts
 
 #Install necessary software
-sudo apt install \
+apt install -y \
                 sqlite3 \
                 perltidy \
                 cpanminus \
                 carton \
+                unzip \
 
 
 #Install the libraries in our cpanfile locally
