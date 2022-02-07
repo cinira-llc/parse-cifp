@@ -13,10 +13,16 @@ docker build --tag faa_cifp .
 ```
 
 
-Run the docker image
+Run the Docker image, downloading and parsing the *current* CIFP:
 
 ```
 docker run --rm -it -v /tmp/data:/data/ faa_cifp
+```
+
+Run the Docker image, downloading and parsing the CIFP from a specific URL:
+
+```
+docker run --rm -it -v /tmp/data:/data/ -e CIFP_URL=https://aeronav.faa.gov/Upload_313-d/cifp/CIFP_220224.zip faa_cifp
 ```
 
 ### Ubuntu

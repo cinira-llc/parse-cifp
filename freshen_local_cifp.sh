@@ -30,8 +30,12 @@ if [ ! -d "$DOWNLOAD_ROOT_DIR" ]; then
     exit 1
 fi
 
-# get URL for current CIFP edition
-cifp_url=$(./get_current_cifp_url.py)
+# Use CIFP_URL if set, else get URL for current CIFP edition
+if [ -n "${CIFP_URL:-}" ]; then
+    cifp_url="${CIFP_URL}"
+else
+    cifp_url=$(./get_current_cifp_url.py)
+fi
 
 # Update local cifp
 echo "Downloading $cifp_url"
