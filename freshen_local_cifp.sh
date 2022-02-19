@@ -37,11 +37,22 @@ else
     cifp_url=$(./get_current_cifp_url.py)
 fi
 
-# Update local cifp
-echo "Downloading $cifp_url"
+# Is CIFP_URL a file:/ URL?
+if [[ "${CIFP_URL}" =~ ^file:/ ]]; then
+
+    # Copy CIFP to the download directory (file:/ or file:/// URL)
+    cifp_path=$(echo $CIFP_URL | sed -E 's/^file:\/(\/\/)?/\//')
+    echo "Copying $cifp_path"
+    cp $cifp_path "$DOWNLOAD_ROOT_DIR"
+else
+
+    # Update local cifp
+    echo "Downloading $cifp_url"
     wget \
         --directory-prefix="$DOWNLOAD_ROOT_DIR"    \
         --timestamping      \
         --ignore-case       \
         "$cifp_url"
+fi
+
 
