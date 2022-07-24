@@ -1,0 +1,23 @@
+{
+  "name": "parsecifp",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "AWS Lambda function interface for parseCifp",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattj65817/parseCifp.git"
+  },
+  "author": "Matt Jensen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattj65817/parseCifp/issues"
+  },
+  "homepage": "https://github.com/mattj65817/parseCifp#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1181.0"
+  }
+}

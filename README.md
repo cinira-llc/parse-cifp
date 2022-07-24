@@ -4,70 +4,32 @@ See here for an example of the output of this utility: https://www.dropbox.com/s
 
 See how Instrument Procedures (including SIDs and STARs) are actually constructed!
 
-### Docker    
+This is an adaptation of the original parseCifp code for use with Amazon S3 and Lambda. **The original parseCifp was 
+created by Jesse McGraw, jlmcgraw@gmail.com.**
 
-Build the docker image
+### AWS Lambda
 
+Builds `CIFP_[cycle].db.bz2` from `CIFP_[cycle].zip` files uploaded to an S3 bucket. 
+
+1. Create a container lambda based on this image.
+2. Set target bucket environment variables:
+   * `CIFP_TARGET_BUCKET` bucket name.
+   * `CIFP_TARGET_KEY_PREFIX` key prefix (if it does not contain a trailing `/`, one will be added.)
+3. Configure an S3 bucket to send `PutObject` notifications to the lambda.
+4. Grant the lambda execution role the following permissions:
+   * S3 **Read** (`GetObject`) on the *source* S3 bucket.
+   * S3 **Write** (`PutObject`) on the *target* S3 bucket.
+
+> At the time of this writing, the following settings seem to be optimal for the lambda execution environment:
+> * Architecture: ARM64 (cheaper)
+> * Timeout: 15 minutes
+> * Memory: 512MB
+>
+> Typically takes about 12 minutes to execute.
+
+Building and pushing images:
+
+```shell
+# Note: [platform] "linux/arm64/v8" and "linux/amd64" are supported.
+$ docker buildx build --platform [platform] --push --tag [tag] .
 ```
-docker build --tag faa_cifp .
-```
-
-
-Run the Docker image, downloading and parsing the *current* CIFP:
-
-```
-docker run --rm -it -v /tmp/data:/data/ faa_cifp
-```
-
-Run the Docker image, downloading and parsing the CIFP from a specific URL:
-
-```
-docker run --rm -it -v /tmp/data:/data/ -e CIFP_URL=https://aeronav.faa.gov/Upload_313-d/cifp/CIFP_220224.zip faa_cifp
-```
-
-### Ubuntu
-
-These instructions are based on using Ubuntu 1604
-
-How to get this utility up and running:
-
-	Enable the "universe" repository in "Software & Updates" section of System Settings and update
-
-	Install git
-		sudo apt install git
-
-	Download the repository
-		git clone https://github.com/jlmcgraw/parseCifp.git
-
-        Run ./setup.sh
-                Installs some dependencies and sets up git hooks
-		 
-	Requires perl version > 5.010
-
-How to use
-
-	Download free CIFP data from AeroNav
-	
-                ./freshen_local_cifp.sh .
-					or 
-				visit http://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/cifp/
-	    
-	./parseCifp.sh <path to downloaded cifp files>
-            eg ./parseCifp.sh ./www.aeronav.faa.gov/Upload_313-d/cifp/cifp_201704.zip   
-	
-	Usage: ./parseCifp.pl <options> <directory>
-		-v debug
-		-e expand coded text (not implemented yet)
-		-g create spatialite compatible geometry (not implemented yet)
-
-
-Output is in cifp-<cycle>.db
-
-Check out some of the sample queries in "Sample CIFP SQL queries.sql" for ideas on how to get at the data
-
-This software and the data it produces come with no guarantees about accuracy or usefulness whatsoever!  Don't use it when your life may be on the line!
-
-Thanks for trying this out!  If you have any feedback, ideas or patches please submit them to github.
-
--Jesse McGraw
-jlmcgraw@gmail.com

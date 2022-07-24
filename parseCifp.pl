@@ -57,7 +57,7 @@ my $cycle        = $opt{c};
 
 #Open appropriate data file in the target directory
 my ( $filename, $dir, $ext ) = fileparse( $targetdir, qr/\.[^.]*/ );
-my $datafile = "$dir" . "FAACIFP18";    # . "-$cycle";
+my $datafile = $dir . "FAACIFP18";    # . "-$cycle";
 
 my $file;
 open $file, '<', $datafile or die "cannot open $datafile: $!";
@@ -123,7 +123,7 @@ my $parser_airportheliport = Parse::FixedLength->new(
 );
 
 # Create/connect to the database
-my $dbfile = "./cifp-$cycle.db";
+my $dbfile = "$dir/cifp-$cycle.db";
 my $dbh = DBI->connect( "dbi:SQLite:dbname=$dbfile", "", "" );
 
 # Set some parameters to speed INSERTs up at the expense of safety
