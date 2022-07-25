@@ -28,21 +28,21 @@ tmp=${sourceZipFilename#*_20}
 cycle=${tmp%.*}
 
 # Where the CIFP data is unzipped to
-datadir=./CIFP_20$cycle/
-
-# Where to save files we create
-outputdir=.
+workdir="$(dirname $sourceZip)"
 
 echo "Unzipping CIFP $cycle files"
-unzip -u -j -q "$sourceZip"  -d "$datadir" > "$cycle-unzip.txt"
+unzip -u -j -q "$sourceZip"  -d "$workdir" > "$workdir/$cycle-unzip.txt"
 
 # Delete any existing files
-rm -f $outputdir/cifp-"$cycle".db
+rm -f $workdir/cifp-"$cycle".db
 
 echo "Creating the database"
 # Create the sqlite database
-./parseCifp.pl -c"$cycle" "$datadir"
+./parseCifp.pl -c"$cycle" "$workdir/"
 
 # Add indexes
 echo "Adding indexes"
-sqlite3 $outputdir/cifp-"$cycle".db < addIndexes.sql
+sqlite3 $workdir/cifp-"$cycle".db < addIndexes.sql
+
+# Bzip2 compress and write to source directory, ".zip" replaced by ".db.bz2".
+bzip2 --best --stdout $workdir/cifp-"$cycle".db > "${sourceZip%.*}".db.bz2
