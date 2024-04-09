@@ -41,7 +41,7 @@ if (!TARGET_KEY_PREFIX) {
  */
 const retrieveSources = async event => {
     const {Records: records} = event;
-    const tag = crypto.randomBytes(16).toString("base64").replace(/\//, "_"),
+    const tag = crypto.randomBytes(16).toString("base64").replaceAll(/\//g, "_"),
         sources = [];
     for (const record of records) {
         const {s3: {bucket: {name: bucket}, object: {key}}} = record,
@@ -51,10 +51,10 @@ const retrieveSources = async event => {
             getParams = {Bucket: bucket, Key: key};
         console.debug(`Reading CIFP from bucket [${bucket}] and key [${key}].`);
         const {Body: content} = await s3.getObject(getParams).promise();
-        console.debug(`Writing CIFP to source [${temp}].`);
+        console.debug(`Writing CIFP to target [${temp}].`);
         await mkdir(dir);
         await writeFile(temp, Buffer.from(content));
-        console.debug(`Wrote CIFP to source [${temp}].`);
+        console.debug(`Wrote CIFP to target [${temp}].`);
         sources.push(temp);
     }
     console.debug(`Returning ${sources.length} source(s): ${sources.sort()}`);
