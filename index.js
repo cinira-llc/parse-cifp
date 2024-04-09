@@ -51,7 +51,7 @@ const retrieveSources = async event => {
             getParams = {Bucket: bucket, Key: key};
         console.debug(`Reading CIFP input from bucket [${bucket}] and key [${key}].`);
         const {Body: content} = await s3.getObject(getParams).promise();
-        console.debug(`Writing CIFP input to target [${temp}].`);
+        console.debug(`Writing CIFP input to [${temp}].`);
         await mkdir(dir);
         await writeFile(temp, Buffer.from(content));
         console.debug(`Wrote CIFP input to [${temp}].`);
