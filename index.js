@@ -49,12 +49,12 @@ const retrieveSources = async event => {
             dir = `/tmp/cifp-${tag}-${sources.length}`,
             temp = `${dir}/${name}`,
             getParams = {Bucket: bucket, Key: key};
-        console.debug(`Reading CIFP input from bucket [${bucket}] and key [${key}].`);
+        console.debug(`Downloading CIFP from [s3://${bucket}/${key}].`);
         const {Body: content} = await s3.getObject(getParams).promise();
-        console.debug(`Writing CIFP input to [${temp}].`);
+        console.debug(`Writing CIFP to [file://${temp}].`);
         await mkdir(dir);
         await writeFile(temp, Buffer.from(content));
-        console.debug(`Wrote CIFP input to [${temp}].`);
+        console.debug(`Wrote CIFP to [file://${temp}].`);
         sources.push([temp, bucket, key]);
     }
     console.debug(`Returning ${sources.length} source(s): [${sources.map(([source]) => source).sort().join("], [")}]`);
@@ -73,15 +73,15 @@ export const handler = async event => {
     const sources = await retrieveSources(event),
         targets = [];
     for (const [source] of sources) {
-        console.debug(`Parsing source [${source}].`);
-        try {
 
-            /* Parse the next object to a bzipped sqlite database. */
+        /* Parse the next object to a bzipped sqlite database. */
+        const targetPath = source.substring(0, source.lastIndexOf(".")),
+            target = `${targetPath}.db.bz2`;
+        console.debug(`Parsing CIFP from [file://${source}] to database [file://${target}].`);
+        try {
             await exec(`/faa/parseCifp.sh ${source}`);
-            const targetPath = source.substring(0, source.lastIndexOf(".")),
-                target = `${targetPath}.db.bz2`;
             targets.push(target);
-            console.debug(`Parsed source [${source}] to target [${target}].`);
+            console.debug(`Parsed CIFP from [file://${source}] to database [file://${target}].`);
         } catch (error) {
             console.error(error);
             const {status, stderr, stdout} = error;
@@ -94,7 +94,7 @@ export const handler = async event => {
 
     /* Upload the parsed sqlite databases to S3. */
     for (const target of targets) {
-        console.debug(`Reading target [${target}].`);
+        console.debug(`Reading database from [file://${target}].`);
         const data = await readFile(target),
             name = target.substring(target.lastIndexOf("/") + 1),
             key = `${TARGET_KEY_PREFIX}/${name}`,
@@ -103,16 +103,16 @@ export const handler = async event => {
                 Key: key,
                 Body: data
             };
-        console.debug(`Writing CIFP output to bucket [${TARGET_BUCKET}] and key [${key}].`);
+        console.debug(`Uploading database to [s3://${TARGET_BUCKET}/${key}].`);
         await s3.putObject(putParams).promise();
-        console.debug(`Wrote CIFP output to bucket [${TARGET_BUCKET}] and key [${key}].`);
+        console.debug(`Uploaded database to [s3://${TARGET_BUCKET}/${key}].`);
     }
 
     /* Delete the source archive. */
     for (const [, bucket, key] of sources) {
         const deleteParams = {Bucket: bucket, Key: key};
-        console.debug(`Deleting CIFP input from bucket [${bucket}] and key [${key}].`);
+        console.debug(`Deleting CIFP from [s3://${bucket}/${key}].`);
         await s3.deleteObject(deleteParams).promise();
-        console.debug(`Deleted CIFP input from bucket [${bucket}] and key [${key}].`);
+        console.debug(`Deleted CIFP from [s3://${bucket}/${key}].`);
     }
 }

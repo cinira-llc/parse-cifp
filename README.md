@@ -30,6 +30,6 @@ Builds `CIFP_[cycle].db.bz2` from `CIFP_[cycle].zip` files uploaded to an S3 buc
 Building and pushing images:
 
 ```shell
-# Note: [platform] "linux/arm64/v8" and "linux/amd64" are supported.
+# Note: [platform] "linux/arm64" and "linux/amd64" are supported.
 $ docker buildx build --platform [platform] --push --tag [tag] .
 ```
