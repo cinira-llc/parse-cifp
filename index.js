@@ -107,12 +107,4 @@ export const handler = async event => {
         await s3.putObject(putParams).promise();
         console.debug(`Uploaded database to [s3://${TARGET_BUCKET}/${key}].`);
     }
-
-    /* Delete the source archive. */
-    for (const [, bucket, key] of sources) {
-        const deleteParams = {Bucket: bucket, Key: key};
-        console.debug(`Deleting CIFP from [s3://${bucket}/${key}].`);
-        await s3.deleteObject(deleteParams).promise();
-        console.debug(`Deleted CIFP from [s3://${bucket}/${key}].`);
-    }
 }
