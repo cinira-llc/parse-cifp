@@ -1,5 +1,5 @@
-FROM amazonlinux:2 AS builder
-RUN mkdir /faa
+FROM amazonlinux:2
+RUN mkdir /data /faa
 WORKDIR /faa
 RUN yum -y update \
   && yum -y install bzip2 cpanminus gcc gzip tar unzip
@@ -14,8 +14,4 @@ COPY addIndexes.sql \
   parsers.pl \
   sections.pl \
   ./
-
-FROM builder AS runtime
-RUN mkdir /data
-WORKDIR /data
-CMD ["/faa/parseCifp.sh", "/data/cifp.zip"]
+CMD ["./parseCifp.sh", "/data/cifp.zip"]
