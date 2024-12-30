@@ -1,11 +1,11 @@
-FROM amazonlinux:2
+FROM amazonlinux:2 AS builder
 RUN mkdir /faa
 WORKDIR /faa
-COPY cpanfile /faa
 RUN yum -y update \
-  && yum -y install bzip2 cpanminus gcc gzip tar unzip \
-  && cpanm Carton \
-  && carton install
+  && yum -y install bzip2 cpanminus gcc gzip tar unzip
+RUN cpanm Carton
+COPY cpanfile ./
+RUN carton install
 COPY addIndexes.sql \
   continuation_application_parsers.pl \
   continuation_base_parsers.pl \
@@ -13,5 +13,9 @@ COPY addIndexes.sql \
   parseCifp.sh \
   parsers.pl \
   sections.pl \
-  /faa
-CMD ["/faa/parseCifp.sh", "/faa/cifp.zip"]
+  ./
+
+FROM builder AS runtime
+RUN mkdir /data
+WORKDIR /data
+CMD ["/faa/parseCifp.sh", "/data/cifp.zip"]
