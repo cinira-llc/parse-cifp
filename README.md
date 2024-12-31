@@ -9,9 +9,12 @@ cycle internally has been removed. **The original parseCifp was created by Jesse
 
 ### Use
 
-1. Mount the CIFP cycle file at `/faa/cifp.zip`
-2. Run the container.
-3. Copy the resulting SQLite3 database from `/faa/cifp-cifp.db`.
+```shell
+docker run --rm -v /path/to/source/dir:/data registry.cinira.net/parse-cifp:latest /data/CIFP_[cycle].zip
+# Output will be in /path/to/source/dir/CIFP_[cycle].db.bz2 
+```
+
+### Multiplatform Build
 
 ```shell
 # Install prepare multiplatform builder if necessary.

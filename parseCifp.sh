@@ -19,16 +19,16 @@ if [ ! -f "$sourceZip" ]; then
 fi
 
 # Process the supplied file name to get cycle number
-# Save everything after 'cifp_20'
+# Save everything after 'cifp_'
 sourceZipFilename=$(basename $sourceZip)
 # 
-tmp=${sourceZipFilename#*_20}
+tmp=${sourceZipFilename#*_}
 
 # Remove the extension, leaving the cycle number
 cycle=${tmp%.*}
 
 # Where the CIFP data is unzipped to
-workdir="$(dirname $sourceZip)"
+workdir=`mktemp -d`
 
 echo "Unzipping CIFP $cycle files"
 unzip -u -j -q "$sourceZip"  -d "$workdir" > "$workdir/$cycle-unzip.txt"

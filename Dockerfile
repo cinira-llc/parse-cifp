@@ -1,6 +1,6 @@
 FROM amazonlinux:2
-RUN mkdir /data /faa
-WORKDIR /faa
+RUN mkdir /app
+WORKDIR /app
 RUN yum -y update \
   && yum -y install bzip2 cpanminus gcc gzip tar unzip
 RUN cpanm Carton
@@ -14,4 +14,4 @@ COPY addIndexes.sql \
   parsers.pl \
   sections.pl \
   ./
-CMD ["./parseCifp.sh", "/data/cifp.zip"]
+ENTRYPOINT ["/app/parseCifp.sh"]
