@@ -10,7 +10,8 @@ cycle internally has been removed. **The original parseCifp was created by Jesse
 ### Use
 
 ```shell
-docker run --rm -v /path/to/source/dir:/data registry.cinira.net/parse-cifp:latest /data/CIFP_[cycle].zip
+# Note: Use "--bzip2", "--gzip", or "--xz" to compress the output database file.
+docker run --rm -v /path/to/source/dir:/data registry.cinira.net/parse-cifp:latest --bzip2 /data/CIFP_[cycle].zip
 # Output will be in /path/to/source/dir/CIFP_[cycle].db.xz 
 ```
 
