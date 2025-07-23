@@ -2,7 +2,7 @@ FROM --platform=linux/amd64 ubuntu:24.04 AS build-amd64
 FROM --platform=linux/arm64 ubuntu:24.04 AS build-arm64
 FROM --platform=linux/riscv64 riscv64/ubuntu:24.04 AS build-riscv64
 
-FROM build-$BUILDARCH
+FROM build-$TARGETARCH
 RUN mkdir /app
 WORKDIR /app
 RUN apt update -y \
