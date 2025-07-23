@@ -44,5 +44,5 @@ echo "Creating the database"
 echo "Adding indexes"
 sqlite3 $workdir/cifp-"$cycle".db < addIndexes.sql
 
-# Bzip2 compress and write to source directory, ".zip" replaced by ".db.bz2".
-bzip2 --best --stdout $workdir/cifp-"$cycle".db > "${sourceZip%.*}".db.bz2
+# ZX compress and write to source directory, ".zip" replaced by ".db.xz".
+xz --extreme --stdout $workdir/cifp-"$cycle".db > "${sourceZip%.*}".db.xz

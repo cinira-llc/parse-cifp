@@ -11,7 +11,7 @@ cycle internally has been removed. **The original parseCifp was created by Jesse
 
 ```shell
 docker run --rm -v /path/to/source/dir:/data registry.cinira.net/parse-cifp:latest /data/CIFP_[cycle].zip
-# Output will be in /path/to/source/dir/CIFP_[cycle].db.bz2 
+# Output will be in /path/to/source/dir/CIFP_[cycle].db.xz 
 ```
 
 ### Multiplatform Build
