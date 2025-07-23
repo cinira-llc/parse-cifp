@@ -6,7 +6,7 @@ FROM build-$TARGETARCH
 RUN mkdir /app
 WORKDIR /app
 RUN apt update -y \
-  && apt install -y cpanminus gcc unzip xz-utils
+  && apt install -y cpanminus gcc sqlite3 unzip xz-utils
 RUN cpanm Carton
 COPY cpanfile ./
 RUN carton install
