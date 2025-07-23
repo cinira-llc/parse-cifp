@@ -21,5 +21,18 @@ docker run --rm -v /path/to/source/dir:/data registry.cinira.net/parse-cifp:late
 docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx create --name multiplatform_builder --platform linux/amd64,linux/arm64,linux/riscv64 --use
 # Note: [platform] "linux/arm64", "linux/amd64", and "linux/riscv64" are supported.
-$ docker buildx build --platform [platform] --push --tag [tag] .
+docker buildx build --platform [platform] --push --tag [tag] .
+```
+### Build for all platforms and push to registry.cinira.net (assume version `1.5.0`)
+
+```shell
+docker login registry.cinira.net
+# Enter username and password when prompted.
+docker buildx build --push \
+  --platform linux/amd64,linux/arm64,linux/riscv64 \
+  --tag registry.cinira.net/parse-cifp:1.5.0 \
+  --tag registry.cinira.net/parse-cifp:1.5 \
+  --tag registry.cinira.net/parse-cifp:1 \
+  --tag registry.cinira.net/parse-cifp:latest \
+  .
 ```
